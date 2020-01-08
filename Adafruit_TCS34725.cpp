@@ -181,7 +181,7 @@ boolean Adafruit_TCS34725::begin(void)
 
   /* Note: by default, the device is in power down mode on bootup */
   enable();
-
+  StartIntegrationTime();
   return true;
 }
   
@@ -265,7 +265,6 @@ void Adafruit_TCS34725::StartIntegrationTime(void)
 /**************************************************************************/
 boolean Adafruit_TCS34725::isIntegrationTimeCompleted(void)
 {
-
   return (this->endTime < millis() ? true : false);
 }
 /**************************************************************************/
@@ -277,11 +276,11 @@ void Adafruit_TCS34725::getRawData (uint16_t *r, uint16_t *g, uint16_t *b, uint1
 {
   if(_mode==NON_BLOCKING)
     if (!_tcs34725Initialised) begin();
-  
   *c = read16(TCS34725_CDATAL);
   *r = read16(TCS34725_RDATAL);
   *g = read16(TCS34725_GDATAL);
   *b = read16(TCS34725_BDATAL);
+  StartIntegrationTime();
  }
 
 /**************************************************************************/
