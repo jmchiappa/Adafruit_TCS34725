@@ -25,8 +25,6 @@
 
 #include "Adafruit_TCS34725.h"
 
-#define BLOCKING_MODE
-
 /*========================================================================*/
 /*                          PRIVATE FUNCTIONS                             */
 /*========================================================================*/
@@ -146,8 +144,9 @@ void Adafruit_TCS34725::disable(void)
     Constructor
 */
 /**************************************************************************/
-Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain) 
+Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode) 
 {
+  _mode = mode;
   _tcs34725Initialised = false;
   _tcs34725IntegrationTime = it;
   _tcs34725Gain = gain;
@@ -251,11 +250,10 @@ void Adafruit_TCS34725::StartIntegrationTime(void)
       this->endTime = +700;
       break;
   }
-#ifndef BLOCKING_MODE
+ if(_mode==BLOCKING)
   delay(this->endTime);
-#else
+ else
   endTime+=this->startTime;
-#endif
 
 }
 
@@ -265,13 +263,11 @@ void Adafruit_TCS34725::StartIntegrationTime(void)
     @brief  return true when integration time is over
 */
 /**************************************************************************/
-#ifdef BLOCKING_MODE
 boolean Adafruit_TCS34725::isIntegrationTimeCompleted(void)
 {
 
   return (this->endTime < millis() ? true : false);
 }
-#endif
 /**************************************************************************/
 /*!
     @brief  Reads the raw red, green, blue and clear channel values
@@ -279,9 +275,8 @@ boolean Adafruit_TCS34725::isIntegrationTimeCompleted(void)
 /**************************************************************************/
 void Adafruit_TCS34725::getRawData (uint16_t *r, uint16_t *g, uint16_t *b, uint16_t *c)
 {
-#ifndef BLOCKING_MODE
-   if (!_tcs34725Initialised) begin();
-#endif
+  if(_mode==NON_BLOCKING)
+    if (!_tcs34725Initialised) begin();
   
   *c = read16(TCS34725_CDATAL);
   *r = read16(TCS34725_RDATAL);

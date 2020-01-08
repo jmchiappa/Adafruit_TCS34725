@@ -115,9 +115,14 @@ typedef enum
 }
 tcs34725Gain_t;
 
+enum{
+  NON_BLOCKING =0,
+  BLOCKING
+};
+
 class Adafruit_TCS34725 {
  public:
-  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X);
+  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X, uint8_t mode=NON_BLOCKING);
   
   boolean  begin(void);
   void     setIntegrationTime(tcs34725IntegrationTime_t it);
@@ -139,6 +144,7 @@ class Adafruit_TCS34725 {
   boolean _tcs34725Initialised;
   tcs34725Gain_t _tcs34725Gain;
   tcs34725IntegrationTime_t _tcs34725IntegrationTime; 
+  uint8_t _mode;
   uint32_t startTime=0;
   uint32_t endTime=0;
   void     disable(void);
