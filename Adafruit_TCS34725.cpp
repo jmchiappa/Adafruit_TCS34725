@@ -165,7 +165,7 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
 boolean Adafruit_TCS34725::begin(void) 
 {
   Wire.begin();
-  
+  Wire.setClock(400000);
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
   // Serial.println(x, HEX);
