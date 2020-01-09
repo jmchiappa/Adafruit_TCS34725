@@ -46,15 +46,15 @@ float powf(const float x, const float y)
 /**************************************************************************/
 void Adafruit_TCS34725::write8 (uint8_t reg, uint32_t value)
 {
-  Wire.beginTransmission(TCS34725_ADDRESS);
+  _i2c->beginTransmission(TCS34725_ADDRESS);
   #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
-  Wire.write(value & 0xFF);
+  _i2c->write(TCS34725_COMMAND_BIT | reg);
+  _i2c->write(value & 0xFF);
   #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
-  Wire.send(value & 0xFF);
+  _i2c->send(TCS34725_COMMAND_BIT | reg);
+  _i2c->send(value & 0xFF);
   #endif
-  Wire.endTransmission();
+  _i2c->endTransmission();
 }
 
 /**************************************************************************/
@@ -64,19 +64,19 @@ void Adafruit_TCS34725::write8 (uint8_t reg, uint32_t value)
 /**************************************************************************/
 uint8_t Adafruit_TCS34725::read8(uint8_t reg)
 {
-  Wire.beginTransmission(TCS34725_ADDRESS);
+  _i2c->beginTransmission(TCS34725_ADDRESS);
   #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
+  _i2c->write(TCS34725_COMMAND_BIT | reg);
   #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
+  _i2c->send(TCS34725_COMMAND_BIT | reg);
   #endif
-  Wire.endTransmission();
+  _i2c->endTransmission();
 
-  Wire.requestFrom(TCS34725_ADDRESS, 1);
+  _i2c->requestFrom(TCS34725_ADDRESS, 1);
   #if ARDUINO >= 100
-  return Wire.read();
+  return _i2c->read();
   #else
-  return Wire.receive();
+  return _i2c->receive();
   #endif
 }
 
@@ -89,21 +89,21 @@ uint16_t Adafruit_TCS34725::read16(uint8_t reg)
 {
   uint16_t x; uint16_t t;
 
-  Wire.beginTransmission(TCS34725_ADDRESS);
+  _i2c->beginTransmission(TCS34725_ADDRESS);
   #if ARDUINO >= 100
-  Wire.write(TCS34725_COMMAND_BIT | reg);
+  _i2c->write(TCS34725_COMMAND_BIT | reg);
   #else
-  Wire.send(TCS34725_COMMAND_BIT | reg);
+  _i2c->send(TCS34725_COMMAND_BIT | reg);
   #endif
-  Wire.endTransmission();
+  _i2c->endTransmission();
 
-  Wire.requestFrom(TCS34725_ADDRESS, 2);
+  _i2c->requestFrom(TCS34725_ADDRESS, 2);
   #if ARDUINO >= 100
-  t = Wire.read();
-  x = Wire.read();
+  t = _i2c->read();
+  x = _i2c->read();
   #else
-  t = Wire.receive();
-  x = Wire.receive();
+  t = _i2c->receive();
+  x = _i2c->receive();
   #endif
   x <<= 8;
   x |= t;
@@ -144,8 +144,10 @@ void Adafruit_TCS34725::disable(void)
     Constructor
 */
 /**************************************************************************/
-Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode) 
+Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode,uint8_t sda, uint8_t scl) 
 {
+	_sda = sda;
+	_scl = scl;
   _mode = mode;
   _tcs34725Initialised = false;
   _tcs34725IntegrationTime = it;
@@ -164,8 +166,18 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
 /**************************************************************************/
 boolean Adafruit_TCS34725::begin(void) 
 {
-  Wire.begin();
-  Wire.setClock(400000);
+//	if((_sda!=SDA)||(_scl!=SCL)) {
+		Serial.println("nouvelle instance Wire");
+		_i2c = &AltWire;
+	// }
+	// else{
+	// 	Serial.println("meme instance Wire");
+	// 	_i2c = &Wire;
+	// }
+	Serial.println("Fin nouvelle instance Wire");
+  _i2c->begin(_sda,_scl);
+	Serial.println("nouvelle instance Wire->begin()");
+  _i2c->setClock(400000);
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
   // Serial.println(x, HEX);
@@ -182,6 +194,7 @@ boolean Adafruit_TCS34725::begin(void)
   /* Note: by default, the device is in power down mode on bootup */
   enable();
   StartIntegrationTime();
+	Serial.println("Fin nouvelle instance Wire->begin()");
   return true;
 }
   
@@ -347,13 +360,13 @@ void Adafruit_TCS34725::setInterrupt(boolean i) {
 }
 
 void Adafruit_TCS34725::clearInterrupt(void) {
-  Wire.beginTransmission(TCS34725_ADDRESS);
+  _i2c->beginTransmission(TCS34725_ADDRESS);
   #if ARDUINO >= 100
-  Wire.write(0x66);
+  _i2c->write(0x66);
   #else
-  Wire.send(0x66);
+  _i2c->send(0x66);
   #endif
-  Wire.endTransmission();
+  _i2c->endTransmission();
 }
 
 
