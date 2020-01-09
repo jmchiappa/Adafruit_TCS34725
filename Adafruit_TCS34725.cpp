@@ -166,17 +166,8 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
 /**************************************************************************/
 boolean Adafruit_TCS34725::begin(void) 
 {
-//	if((_sda!=SDA)||(_scl!=SCL)) {
-		Serial.println("nouvelle instance Wire");
-		_i2c = &AltWire;
-	// }
-	// else{
-	// 	Serial.println("meme instance Wire");
-	// 	_i2c = &Wire;
-	// }
-	Serial.println("Fin nouvelle instance Wire");
+  _i2c = &AltWire;
   _i2c->begin(_sda,_scl);
-	Serial.println("nouvelle instance Wire->begin()");
   _i2c->setClock(400000);
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
@@ -194,7 +185,6 @@ boolean Adafruit_TCS34725::begin(void)
   /* Note: by default, the device is in power down mode on bootup */
   enable();
   StartIntegrationTime();
-	Serial.println("Fin nouvelle instance Wire->begin()");
   return true;
 }
   
