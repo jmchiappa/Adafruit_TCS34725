@@ -166,7 +166,11 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
 /**************************************************************************/
 boolean Adafruit_TCS34725::begin(void) 
 {
-  _i2c = &AltWire;
+	if((_sda==SDA)&&(_scl==SCL))
+		_i2c = &Wire;
+	else
+  	_i2c = &AltWire;
+  
   _i2c->begin(_sda,_scl);
   _i2c->setClock(400000);
   /* Make sure we're actually connected */
