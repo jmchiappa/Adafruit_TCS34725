@@ -182,8 +182,8 @@ boolean Adafruit_TCS34725::begin(void)
 			_i2c = &Wire;
 		else
 	  	_i2c = &AltWire;
-	  _i2c->begin(_sda,_scl);
 	}
+  _i2c->begin(_sda,_scl);
   _i2c->setClock(400000);
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
