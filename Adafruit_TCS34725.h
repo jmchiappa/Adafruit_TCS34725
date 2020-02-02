@@ -122,7 +122,10 @@ enum{
 
 class Adafruit_TCS34725 {
  public:
+  // constructors
+
   Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X, uint8_t mode=NON_BLOCKING,uint8_t sda=SDA,uint8_t scl=SCL);
+  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X,uint8_t mode = NON_BLOCKING, TwoWire *i2c = &Wire);
   
   boolean  begin(void);
   void     setIntegrationTime(tcs34725IntegrationTime_t it);
@@ -147,7 +150,7 @@ class Adafruit_TCS34725 {
   uint8_t _mode;
   uint8_t _sda = SDA;
   uint8_t _scl = SCL;
-  TwoWire *_i2c;
+  TwoWire *_i2c = NULL;
   TwoWire AltWire;
   uint32_t startTime=0;
   uint32_t endTime=0;
