@@ -124,8 +124,11 @@ class Adafruit_TCS34725 {
  public:
   // constructors
 
-  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X, uint8_t mode=NON_BLOCKING,uint8_t sda=SDA,uint8_t scl=SCL);
-  Adafruit_TCS34725(tcs34725IntegrationTime_t = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t = TCS34725_GAIN_1X,uint8_t mode = NON_BLOCKING, TwoWire *i2c = &Wire);
+  // Adafruit_TCS34725() { Adafruit_TCS34725(TCS34725_INTEGRATIONTIME_2_4MS, TCS34725_GAIN_1X,NON_BLOCKING);}
+  // Adafruit_TCS34725(tcs34725IntegrationTime_t it) { Adafruit_TCS34725(it, TCS34725_GAIN_1X,NON_BLOCKING);}
+  // Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain) { Adafruit_TCS34725(it, gain,NON_BLOCKING);}
+
+  Adafruit_TCS34725(tcs34725IntegrationTime_t it = TCS34725_INTEGRATIONTIME_2_4MS, tcs34725Gain_t gain = TCS34725_GAIN_1X,uint8_t mode = NON_BLOCKING, TwoWire *i2c = &Wire);
   
   boolean  begin(void);
   void     setIntegrationTime(tcs34725IntegrationTime_t it);
@@ -148,10 +151,10 @@ class Adafruit_TCS34725 {
   tcs34725Gain_t _tcs34725Gain;
   tcs34725IntegrationTime_t _tcs34725IntegrationTime; 
   uint8_t _mode;
-  uint8_t _sda = SDA;
-  uint8_t _scl = SCL;
+  // uint8_t _sda = SDA;
+  // uint8_t _scl = SCL;
   TwoWire *_i2c = NULL;
-  TwoWire AltWire;
+  // TwoWire AltWire;
   uint32_t startTime=0;
   uint32_t endTime=0;
   void     disable(void);

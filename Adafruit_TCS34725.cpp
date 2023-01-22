@@ -144,21 +144,21 @@ void Adafruit_TCS34725::disable(void)
     Constructor
 */
 /**************************************************************************/
-Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode,uint8_t sda, uint8_t scl) 
-{
-	_sda = sda;
-	_scl = scl;
-  _mode = mode;
-  _tcs34725Initialised = false;
-  _tcs34725IntegrationTime = it;
-  _tcs34725Gain = gain;
-}
+// Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode,uint8_t sda, uint8_t scl) 
+// {
+// 	_sda = sda;
+// 	_scl = scl;
+//   _mode = mode;
+//   _tcs34725Initialised = false;
+//   _tcs34725IntegrationTime = it;
+//   _tcs34725Gain = gain;
+// }
 
-Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode, TwoWire *i2c) 
+Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_t gain,uint8_t mode, TwoWire *i2c)
 {
 	_i2c = i2c;
-	_sda = NC;
-	_scl = NC;
+	// _sda = NC;
+	// _scl = NC;
 	_mode = mode;
   _tcs34725Initialised = false;
   _tcs34725IntegrationTime = it;
@@ -177,13 +177,17 @@ Adafruit_TCS34725::Adafruit_TCS34725(tcs34725IntegrationTime_t it, tcs34725Gain_
 /**************************************************************************/
 boolean Adafruit_TCS34725::begin(void) 
 {
-	if(_i2c==NULL) {
-		if((_sda==SDA)&&(_scl==SCL))
-			_i2c = &Wire;
-		else
-	  	_i2c = &AltWire;
-	}
-  _i2c->begin(_sda,_scl);
+  Serial.println((long)_i2c);
+  
+  // Serial.println(_sda);
+  // Serial.println(_scl);
+	// if(_i2c==NULL) {
+	// 	if((_sda==SDA)&&(_scl==SCL))
+	// 		_i2c = &Wire;
+	// 	else
+	//   	_i2c = &AltWire;
+	// }
+  // _i2c->begin(_sda,_scl);
   _i2c->setClock(400000);
   /* Make sure we're actually connected */
   uint8_t x = read8(TCS34725_ID);
